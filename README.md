@@ -35,31 +35,6 @@ A modern and responsive personal portfolio website showcasing my journey as the 
 - Projects
 - Contact
 
-## Folder Structure
-
-```
-src/
-├── components/
-├── pages/
-├── assets/
-├── data/
-├── hooks/
-├── utils/
-└── App.tsx
-```
-
-## Installation
-
-```bash
-git clone https://github.com/yourusername/campus-mantri-portfolio.git
-
-cd campus-mantri-portfolio
-
-npm install
-
-npm run dev
-```
-
 ## Future Improvements
 
 - Dark mode
