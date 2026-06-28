@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom';
+"use client";
+
+import Link from 'next/link';
 import { Mail, Globe, Heart } from 'lucide-react';
 import { Linkedin, Github } from './icons';
 import { CONFIG } from '../config/content';
@@ -25,11 +27,11 @@ export function Footer() {
 
           {/* Middle Column: Quick Navigation Links */}
           <div className="flex flex-wrap justify-center gap-4 text-sm font-medium text-muted-foreground">
-            <Link to="/" className="hover:text-primary transition-colors">Home</Link>
-            <Link to="/about" className="hover:text-primary transition-colors">About</Link>
-            <Link to="/campus-mantri" className="hover:text-primary transition-colors">Journey</Link>
-            <Link to="/achievements" className="hover:text-primary transition-colors">Achievements</Link>
-            <Link to="/workshops" className="hover:text-primary transition-colors">Workshops</Link>
+            <Link href="/" className="hover:text-primary transition-colors">Home</Link>
+            <Link href="/about" className="hover:text-primary transition-colors">About</Link>
+            <Link href="/campus-mantri" className="hover:text-primary transition-colors">Journey</Link>
+            <Link href="/achievements" className="hover:text-primary transition-colors">Achievements</Link>
+            <Link href="/workshops" className="hover:text-primary transition-colors">Workshops</Link>
           </div>
 
           {/* Right Column: Socials */}

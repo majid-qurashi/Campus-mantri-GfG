@@ -1,10 +1,14 @@
+"use client";
+
 import { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Menu, X, Terminal } from 'lucide-react';
 import { ModeToggle } from './mode-toggle';
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
 
   const navLinks = [
     { path: '/', label: 'Home' },
@@ -23,7 +27,7 @@ export function Navbar() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <div className="flex items-center">
-            <Link to="/" className="flex items-center gap-2 group">
+            <Link href="/" className="flex items-center gap-2 group">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary transition-all group-hover:scale-105 group-hover:bg-primary/20">
                 <Terminal className="h-5 w-5" />
               </div>
@@ -40,21 +44,22 @@ export function Navbar() {
 
           {/* Desktop Nav Links */}
           <div className="hidden lg:flex items-center gap-6">
-            {navLinks.map((link) => (
-              <NavLink
-                key={link.path}
-                to={link.path}
-                className={({ isActive }) =>
-                  `text-sm font-medium transition-colors hover:text-primary ${
+            {navLinks.map((link) => {
+              const isActive = pathname === link.path;
+              return (
+                <Link
+                  key={link.path}
+                  href={link.path}
+                  className={`text-sm font-medium transition-colors hover:text-primary ${
                     isActive
                       ? 'text-primary font-bold border-b-2 border-primary py-1'
                       : 'text-muted-foreground'
-                  }`
-                }
-              >
-                {link.label}
-              </NavLink>
-            ))}
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
             <div className="border-l border-border pl-4">
               <ModeToggle />
             </div>
@@ -79,22 +84,23 @@ export function Navbar() {
       {isOpen && (
         <div className="lg:hidden border-t border-border bg-background animate-in slide-in-from-top duration-200">
           <div className="space-y-1 px-2 pb-3 pt-2">
-            {navLinks.map((link) => (
-              <NavLink
-                key={link.path}
-                to={link.path}
-                onClick={() => setIsOpen(false)}
-                className={({ isActive }) =>
-                  `block rounded-md px-3 py-2 text-base font-medium transition-colors ${
+            {navLinks.map((link) => {
+              const isActive = pathname === link.path;
+              return (
+                <Link
+                  key={link.path}
+                  href={link.path}
+                  onClick={() => setIsOpen(false)}
+                  className={`block rounded-md px-3 py-2 text-base font-medium transition-colors ${
                     isActive
                       ? 'bg-primary/10 text-primary font-semibold'
                       : 'text-muted-foreground hover:bg-muted hover:text-foreground'
-                  }`
-                }
-              >
-                {link.label}
-              </NavLink>
-            ))}
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
           </div>
         </div>
       )}

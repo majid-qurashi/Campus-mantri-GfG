@@ -1,12 +1,13 @@
+"use client";
+
 import { useState } from 'react';
 import { Mail, Copy, Check, Send, Sparkles, AlertCircle, Loader2 } from 'lucide-react';
-import { Linkedin } from '../components/icons';
-import { SEOHead } from '../components/seo-head';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
-import { Button } from '../components/ui/button';
-import { CONFIG } from '../config/content';
+import { Linkedin } from '../../components/icons';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
+import { Button } from '../../components/ui/button';
+import { CONFIG } from '../../config/content';
 
-export function Contact() {
+export function ContactClient() {
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', message: '' });
   const [copied, setCopied] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -106,18 +107,13 @@ export function Contact() {
 
   return (
     <div className="space-y-12 py-8 max-w-4xl mx-auto">
-      <SEOHead 
-        title="Contact Me" 
-        description={`Get in touch with Majid Qurashi. Send an email, connect on LinkedIn, or fill out the campus representative contact form.`} 
-      />
-
       {/* Header */}
       <section className="space-y-4 text-center">
         <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
           Get in Touch
         </h1>
         <p className="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto leading-relaxed">
-          Let's collaborate on workshops, hackathons, open-source projects, or coding seminars at Safapora.
+          Let&apos;s collaborate on workshops, hackathons, open-source projects, or coding seminars at Safapora.
         </p>
       </section>
 
@@ -179,7 +175,7 @@ export function Contact() {
               </Button>
             </CardHeader>
             <CardContent className="text-xs text-muted-foreground leading-relaxed bg-background/50 p-3 rounded-lg border border-border/60 mx-5 mb-5 font-mono">
-              "{CONFIG.personal.prefilledLinkedinMessage}"
+              &quot;{CONFIG.personal.prefilledLinkedinMessage}&quot;
             </CardContent>
           </Card>
         </div>
@@ -198,7 +194,7 @@ export function Contact() {
                 </div>
                 <h3 className="text-lg font-bold text-foreground">Message Sent Successfully!</h3>
                 <p className="text-sm text-muted-foreground">
-                  Thank you for reaching out. I'll get back to you shortly.
+                  Thank you for reaching out. I&apos;ll get back to you shortly.
                 </p>
                 <Button variant="outline" size="sm" onClick={() => setSubmitted(false)} className="mt-2">
                   Send Another Message

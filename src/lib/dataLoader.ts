@@ -7,16 +7,25 @@ interface CachedData<T> {
   timestamp: number;
 }
 
-const CACHE_EXPIRATION_MS = 60 * 60 * 1000; // 1 hour
+const CACHE_EXPIRATION_MS = 10 * 60 * 1000; // 10 minutes
 
 /**
  * Universal CSV fetcher from Google Sheets published feeds.
  */
-async function fetchCSV(url: string): Promise<Record<string, string>[]> {
+async function fetchCSV(url: string, force = false): Promise<Record<string, string>[]> {
   if (!url || url.trim() === '') {
     throw new Error('Google Sheets feed URL is not configured.');
   }
-  const response = await fetch(url);
+  
+  const fetchOptions: RequestInit = {};
+  if (force) {
+    fetchOptions.cache = 'no-store';
+  } else {
+    // Revalidate after 10 minutes (600 seconds)
+    (fetchOptions as any).next = { revalidate: 600 };
+  }
+
+  const response = await fetch(url, fetchOptions);
   if (!response.ok) {
     throw new Error(`Failed to fetch CSV data from: ${url}`);
   }
@@ -33,7 +42,7 @@ async function getCachedOrFetch<T>(
   force = false
 ): Promise<T> {
   if (!force) {
-    const cached = localStorage.getItem(`gfg_cache_${key}`);
+    const cached = typeof window !== 'undefined' ? localStorage.getItem(`gfg_cache_${key}`) : null;
     if (cached) {
       try {
         const parsed = JSON.parse(cached) as CachedData<T>;
@@ -53,7 +62,9 @@ async function getCachedOrFetch<T>(
     data: fresh,
     timestamp: Date.now()
   };
-  localStorage.setItem(`gfg_cache_${key}`, JSON.stringify(cacheObj));
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(`gfg_cache_${key}`, JSON.stringify(cacheObj));
+  }
   return fresh;
 }
 
@@ -61,7 +72,7 @@ export async function loadAchievements(force = false): Promise<Achievement[]> {
   return getCachedOrFetch(
     'achievements',
     async () => {
-      const data = await fetchCSV(CONFIG.googleSheets.achievements);
+      const data = await fetchCSV(CONFIG.googleSheets.achievements, force);
       return data.map(item => ({
         title: item.title || '',
         issuingOrg: item.issuingOrg || '',
@@ -77,7 +88,7 @@ export async function loadWorkshops(force = false): Promise<Workshop[]> {
   return getCachedOrFetch(
     'workshops',
     async () => {
-      const data = await fetchCSV(CONFIG.googleSheets.workshops);
+      const data = await fetchCSV(CONFIG.googleSheets.workshops, force);
       return data.map(item => ({
         title: item.title || '',
         date: item.date || '',
@@ -96,7 +107,7 @@ export async function loadGallery(force = false): Promise<GalleryImage[]> {
   return getCachedOrFetch(
     'gallery',
     async () => {
-      const data = await fetchCSV(CONFIG.googleSheets.gallery);
+      const data = await fetchCSV(CONFIG.googleSheets.gallery, force);
       return data.map(item => ({
         image: item.image || '',
         title: item.title || undefined,
@@ -112,7 +123,7 @@ export async function loadProjects(force = false): Promise<Project[]> {
   return getCachedOrFetch(
     'projects',
     async () => {
-      const data = await fetchCSV(CONFIG.googleSheets.projects);
+      const data = await fetchCSV(CONFIG.googleSheets.projects, force);
       return data.map(item => ({
         title: item.title || '',
         shortDescription: item.shortDescription || '',

@@ -1,19 +1,28 @@
+"use client";
+
 import { useEffect, useState } from 'react';
 import { Eye, Images } from 'lucide-react';
-import { SEOHead } from '../components/seo-head';
-import { Lightbox } from '../components/lightbox';
-import { Button } from '../components/ui/button';
-import { Card } from '../components/ui/card';
-import { loadGallery } from '../lib/dataLoader';
-import type { GalleryImage } from '../types';
+import { Lightbox } from '../../components/lightbox';
+import { Button } from '../../components/ui/button';
+import { Card } from '../../components/ui/card';
+import { loadGallery } from '../../lib/dataLoader';
+import type { GalleryImage } from '../../types';
 
-export function Gallery() {
-  const [images, setImages] = useState<GalleryImage[]>([]);
+export function GalleryClient({
+  initialImages = []
+}: {
+  initialImages?: GalleryImage[];
+}) {
+  const [images, setImages] = useState<GalleryImage[]>(initialImages);
   const [selectedItem, setSelectedItem] = useState<GalleryImage | null>(null);
   const [activeCategory, setActiveCategory] = useState('All');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(initialImages.length === 0);
 
   useEffect(() => {
+    if (initialImages.length > 0) {
+      setLoading(false);
+      return;
+    }
     async function getGallery() {
       try {
         const data = await loadGallery();
@@ -25,7 +34,7 @@ export function Gallery() {
       }
     }
     getGallery();
-  }, []);
+  }, [initialImages]);
 
   // Compute categories
   const categories = ['All', ...Array.from(new Set(images.map(img => img.category).filter(Boolean))) as string[]];
@@ -36,11 +45,6 @@ export function Gallery() {
 
   return (
     <div className="space-y-8 py-8">
-      <SEOHead 
-        title="Gallery" 
-        description={`Visual archive of GeeksforGeeks hackathons, seminars, and coding tests hosted by Majid Qurashi.`} 
-      />
-
       {/* Intro Header */}
       <section className="space-y-4">
         <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl flex items-center gap-2.5">

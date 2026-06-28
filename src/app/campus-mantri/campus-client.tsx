@@ -1,14 +1,15 @@
+"use client";
+
 import { useState } from 'react';
 import { Award, Sparkles, Terminal, Users, CalendarDays, BookOpen, Eye } from 'lucide-react';
-import { SEOHead } from '../components/seo-head';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
-import { Timeline, type TimelineItemProps } from '../components/timeline';
-import { Badge } from '../components/ui/badge';
-import { Lightbox } from '../components/lightbox';
-import offerLetterImg from '../assets/offer-letter.webp';
-import campusMantriImg from '../assets/campus-mantri-img.webp';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
+import { Timeline, type TimelineItemProps } from '../../components/timeline';
+import { Badge } from '../../components/ui/badge';
+import { Lightbox } from '../../components/lightbox';
+import offerLetterImg from '@/assets/offer-letter.webp';
+import campusMantriImg from '@/assets/campus-mantri-img.webp';
 
-export function CampusMantri() {
+export function CampusMantriClient() {
   const objectives = [
     {
       icon: <Users className="h-6 w-6 text-primary" />,
@@ -66,11 +67,6 @@ export function CampusMantri() {
 
   return (
     <div className="space-y-12 py-8">
-      <SEOHead 
-        title="Campus Mantri Journey" 
-        description={`Discover Majid Qurashi's role and milestones as the official GeeksforGeeks Campus Representative at GCET Safapora.`} 
-      />
-
       {/* Header banner */}
       <section className="space-y-4 text-center max-w-4xl mx-auto flex flex-col items-center">
         <Badge variant="success" className="py-1 px-3">
@@ -86,7 +82,7 @@ export function CampusMantri() {
         {/* Campus Mantri Image Hero Banner */}
         <div className="w-full max-w-2xl rounded-2xl overflow-hidden border border-border/60 shadow-sm aspect-video max-h-[300px] mt-4 relative bg-muted">
           <img 
-            src={campusMantriImg} 
+            src={campusMantriImg.src} 
             alt="Campus Mantri Community Banner" 
             className="w-full h-full object-cover" 
           />
@@ -121,7 +117,7 @@ export function CampusMantri() {
                 As the representative for **GCET Safapora Safapora Kashmir**, Majid Yaseen Qurashi is authorized to coordinate local webinars, distribute GFG learning materials, verify student certificates, and run hackathons under GFG branding.
               </p>
               <blockquote className="border-l-4 border-primary pl-4 py-1.5 italic bg-primary/5 text-foreground rounded-r-md">
-                "To represent GCET Safapora, organize tech workshops, and build a vibrant competitive programming network..."
+                &quot;To represent GCET Safapora, organize tech workshops, and build a vibrant competitive programming network...&quot;
               </blockquote>
             </CardContent>
           </div>
@@ -146,14 +142,14 @@ export function CampusMantri() {
         <Card 
           className="cursor-pointer overflow-hidden group hover:border-primary/45 transition-all flex flex-col justify-between"
           onClick={() => setLightboxImage({ 
-            image: offerLetterImg, 
+            image: offerLetterImg.src, 
             title: "Official GFG Offer Letter", 
             caption: "Majid Yaseen Qurashi's appointment letter as Campus Mantri representative at GCET Safapora Kashmir." 
           })}
         >
           <div className="relative aspect-[3/4] w-full overflow-hidden bg-muted border-b border-border">
             <img 
-              src={offerLetterImg} 
+              src={offerLetterImg.src} 
               alt="Offer Letter Preview" 
               className="w-full h-full object-cover transition-transform group-hover:scale-102 duration-300"
             />

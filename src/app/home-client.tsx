@@ -1,22 +1,35 @@
+"use client";
+
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { ArrowRight, Award, Calendar, ExternalLink, Code } from 'lucide-react';
-import { SEOHead } from '../components/seo-head';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { loadAchievements, loadWorkshops, loadProjects } from '../lib/dataLoader';
 import type { Achievement, Workshop, Project } from '../types';
 import { CONFIG } from '../config/content';
-import majidProfile from '../assets/majid.webp';
+import majidProfile from '@/assets/majid.webp';
 
-export function Home() {
-  const [workshops, setWorkshops] = useState<Workshop[]>([]);
-  const [achievements, setAchievements] = useState<Achievement[]>([]);
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
+export function HomeClient({
+  initialWorkshops = [],
+  initialAchievements = [],
+  initialProjects = []
+}: {
+  initialWorkshops?: Workshop[];
+  initialAchievements?: Achievement[];
+  initialProjects?: Project[];
+}) {
+  const [workshops, setWorkshops] = useState<Workshop[]>(initialWorkshops.slice(0, 3));
+  const [achievements, setAchievements] = useState<Achievement[]>(initialAchievements.slice(0, 3));
+  const [projects, setProjects] = useState<Project[]>(initialProjects.slice(0, 3));
+  const [loading, setLoading] = useState(initialWorkshops.length === 0);
 
   useEffect(() => {
+    if (initialWorkshops.length > 0) {
+      setLoading(false);
+      return;
+    }
     async function fetchData() {
       try {
         const [w, a, p] = await Promise.all([
@@ -34,7 +47,7 @@ export function Home() {
       }
     }
     fetchData();
-  }, []);
+  }, [initialWorkshops, initialAchievements, initialProjects]);
 
   const stats = [
     { label: "Students Impacted", value: "50+" },
@@ -45,11 +58,6 @@ export function Home() {
 
   return (
     <div className="space-y-16 py-8">
-      <SEOHead 
-        title="Home" 
-        description={`GeeksforGeeks Campus Mantri Portfolio of Majid Yaseen Qurashi. B-Tech CSE student at GCET Safapora Kashmir.`} 
-      />
-
       {/* Hero Section */}
       <section className="relative overflow-hidden rounded-3xl border border-primary/20 bg-linear-to-b from-primary/10 via-primary/5 to-transparent px-6 py-12 sm:px-12 sm:py-20">
         {/* Subtle grid background decoration */}
@@ -69,18 +77,18 @@ export function Home() {
             </h1>
             
             <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
-              Hi, I'm <span className="font-semibold text-foreground">{CONFIG.personal.name}</span>. 
+              Hi, I&apos;m <span className="font-semibold text-foreground">{CONFIG.personal.name}</span>. 
               I drive technical initiatives, foster problem-solving in DSA, and build high-performance user interfaces as a Software Engineer.
             </p>
 
             <div className="flex flex-wrap justify-center lg:justify-start gap-4 pt-2">
               <Button size="lg" asChild>
-                <Link to="/campus-mantri" className="flex items-center gap-2">
+                <Link href="/campus-mantri" className="flex items-center gap-2">
                   Explore CM Journey <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
-                <Link to="/contact">Get in Touch</Link>
+                <Link href="/contact">Get in Touch</Link>
               </Button>
             </div>
           </div>
@@ -93,7 +101,7 @@ export function Home() {
               
               <div className="relative rounded-2xl border-2 border-primary/30 p-2 bg-card/50 backdrop-blur-xs shadow-xl max-w-70 sm:max-w-[320px]">
                 <img 
-                  src={majidProfile} 
+                  src={majidProfile.src} 
                   alt={CONFIG.personal.name}
                   className="rounded-xl w-full object-cover aspect-square transition-all duration-500 hover:scale-[1.02]"
                 />
@@ -132,7 +140,7 @@ export function Home() {
             </p>
           </div>
           <Button variant="ghost" size="sm" asChild>
-            <Link to="/workshops" className="flex items-center gap-1.5">
+            <Link href="/workshops" className="flex items-center gap-1.5">
               View All <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </Button>
@@ -195,7 +203,7 @@ export function Home() {
             </p>
           </div>
           <Button variant="ghost" size="sm" asChild>
-            <Link to="/projects" className="flex items-center gap-1.5">
+            <Link href="/projects" className="flex items-center gap-1.5">
               View All <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </Button>
@@ -251,7 +259,7 @@ export function Home() {
             </p>
           </div>
           <Button variant="ghost" size="sm" asChild>
-            <Link to="/achievements" className="flex items-center gap-1.5">
+            <Link href="/achievements" className="flex items-center gap-1.5">
               View All <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </Button>
@@ -289,11 +297,11 @@ export function Home() {
         <div className="max-w-xl space-y-2">
           <h3 className="text-xl sm:text-2xl font-extrabold text-foreground">Interested in hosting a workshop or coding boot camp?</h3>
           <p className="text-sm text-muted-foreground">
-            Let's collaborate to organize high-impact events and help more students get started with software development.
+            Let&apos;s collaborate to organize high-impact events and help more students get started with software development.
           </p>
         </div>
         <Button size="lg" asChild className="mt-4 sm:mt-0">
-          <Link to="/contact">Let's Connect</Link>
+          <Link href="/contact">Let&apos;s Connect</Link>
         </Button>
       </section>
     </div>

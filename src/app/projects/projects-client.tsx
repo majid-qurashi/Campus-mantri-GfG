@@ -1,19 +1,28 @@
+"use client";
+
 import { useEffect, useState } from 'react';
 import { ExternalLink, Code, Search, Sparkles } from 'lucide-react';
-import { SEOHead } from '../components/seo-head';
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '../components/ui/card';
-import { Button } from '../components/ui/button';
-import { Badge } from '../components/ui/badge';
-import { loadProjects } from '../lib/dataLoader';
-import type { Project } from '../types';
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '../../components/ui/card';
+import { Button } from '../../components/ui/button';
+import { Badge } from '../../components/ui/badge';
+import { loadProjects } from '../../lib/dataLoader';
+import type { Project } from '../../types';
 
-export function Projects() {
-  const [projects, setProjects] = useState<Project[]>([]);
+export function ProjectsClient({
+  initialProjects = []
+}: {
+  initialProjects?: Project[];
+}) {
+  const [projects, setProjects] = useState<Project[]>(initialProjects);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTech, setSelectedTech] = useState('All');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(initialProjects.length === 0);
 
   useEffect(() => {
+    if (initialProjects.length > 0) {
+      setLoading(false);
+      return;
+    }
     async function getProjects() {
       try {
         const data = await loadProjects();
@@ -25,7 +34,7 @@ export function Projects() {
       }
     }
     getProjects();
-  }, []);
+  }, [initialProjects]);
 
   // Compute all available technology tags
   const allTechs = ['All', ...Array.from(new Set(projects.flatMap(p => p.tech)))];
@@ -45,11 +54,6 @@ export function Projects() {
 
   return (
     <div className="space-y-8 py-8">
-      <SEOHead 
-        title="Projects Showcase" 
-        description={`Inspect Majid Qurashi's software developments, AI news classifiers, and UI designs.`} 
-      />
-
       {/* Intro Header */}
       <section className="space-y-4">
         <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl flex items-center gap-2.5">

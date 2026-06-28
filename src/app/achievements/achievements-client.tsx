@@ -1,17 +1,26 @@
+"use client";
+
 import { useEffect, useState } from 'react';
 import { Search, Award, ExternalLink } from 'lucide-react';
-import { SEOHead } from '../components/seo-head';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
-import { Button } from '../components/ui/button';
-import { loadAchievements } from '../lib/dataLoader';
-import type { Achievement } from '../types';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
+import { Button } from '../../components/ui/button';
+import { loadAchievements } from '../../lib/dataLoader';
+import type { Achievement } from '../../types';
 
-export function Achievements() {
-  const [achievements, setAchievements] = useState<Achievement[]>([]);
+export function AchievementsClient({
+  initialAchievements = []
+}: {
+  initialAchievements?: Achievement[];
+}) {
+  const [achievements, setAchievements] = useState<Achievement[]>(initialAchievements);
   const [searchTerm, setSearchTerm] = useState('');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(initialAchievements.length === 0);
 
   useEffect(() => {
+    if (initialAchievements.length > 0) {
+      setLoading(false);
+      return;
+    }
     async function getAchievements() {
       try {
         const data = await loadAchievements();
@@ -23,7 +32,7 @@ export function Achievements() {
       }
     }
     getAchievements();
-  }, []);
+  }, [initialAchievements]);
 
   const filteredAchievements = achievements.filter(ach => {
     const term = searchTerm.toLowerCase();
@@ -36,11 +45,6 @@ export function Achievements() {
 
   return (
     <div className="space-y-8 py-8">
-      <SEOHead 
-        title="Achievements & Certifications" 
-        description={`View Majid Qurashi's credentials, faculty development program certifications, data analysis certificates, and awards.`} 
-      />
-
       {/* Intro Header */}
       <section className="space-y-4">
         <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
@@ -99,13 +103,12 @@ export function Achievements() {
                       {ach.date}
                     </span>
                   ) : (
-                    <span className="text-xs font-medium bg-muted text-muted-foreground px-2 py-0.5 rounded-sm">
-                      Verified
-                    </span>
+                    <span />
                   )}
+
                   {ach.verificationLink && (
-                    <Button variant="link" size="xs" className="h-auto p-0 flex items-center gap-1" asChild>
-                      <a href={ach.verificationLink} target="_blank" rel="noopener noreferrer">
+                    <Button variant="ghost" size="xs" className="text-primary hover:text-primary-dark" asChild>
+                      <a href={ach.verificationLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1">
                         Verify <ExternalLink className="h-3 w-3" />
                       </a>
                     </Button>
@@ -116,14 +119,9 @@ export function Achievements() {
           ))}
         </div>
       ) : (
-        <Card className="text-center py-12">
-          <CardContent className="space-y-2">
-            <p className="text-muted-foreground text-sm font-medium">No credentials match your search query.</p>
-            <Button variant="ghost" size="sm" onClick={() => setSearchTerm('')}>
-              Clear Search
-            </Button>
-          </CardContent>
-        </Card>
+        <div className="text-center py-12 text-muted-foreground">
+          No achievements found matching your search.
+        </div>
       )}
     </div>
   );

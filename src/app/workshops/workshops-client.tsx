@@ -1,19 +1,28 @@
+"use client";
+
 import { useEffect, useState } from 'react';
 import { ArrowUpDown, ExternalLink, X, MapPin, Sparkles } from 'lucide-react';
-import { SEOHead } from '../components/seo-head';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '../components/ui/card';
-import { Button } from '../components/ui/button';
-import { Badge } from '../components/ui/badge';
-import { loadWorkshops } from '../lib/dataLoader';
-import type { Workshop } from '../types';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '../../components/ui/card';
+import { Button } from '../../components/ui/button';
+import { Badge } from '../../components/ui/badge';
+import { loadWorkshops } from '../../lib/dataLoader';
+import type { Workshop } from '../../types';
 
-export function Workshops() {
-  const [workshops, setWorkshops] = useState<Workshop[]>([]);
+export function WorkshopsClient({
+  initialWorkshops = []
+}: {
+  initialWorkshops?: Workshop[];
+}) {
+  const [workshops, setWorkshops] = useState<Workshop[]>(initialWorkshops);
   const [selectedWorkshop, setSelectedWorkshop] = useState<Workshop | null>(null);
   const [sortNewest, setSortNewest] = useState(true);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(initialWorkshops.length === 0);
 
   useEffect(() => {
+    if (initialWorkshops.length > 0) {
+      setLoading(false);
+      return;
+    }
     async function getWorkshops() {
       try {
         const data = await loadWorkshops();
@@ -25,7 +34,7 @@ export function Workshops() {
       }
     }
     getWorkshops();
-  }, []);
+  }, [initialWorkshops]);
 
   const sortedWorkshops = [...workshops].sort((a, b) => {
     const dateA = new Date(a.date).getTime();
@@ -35,11 +44,6 @@ export function Workshops() {
 
   return (
     <div className="space-y-8 py-8">
-      <SEOHead 
-        title="Workshops & Events" 
-        description={`Browse technical coding, competitive programming, and open-source collaboration workshops organized by GFG Campus Mantri Majid Qurashi.`} 
-      />
-
       {/* Intro Header */}
       <section className="flex flex-col sm:flex-row justify-between sm:items-end gap-4 border-b border-border/40 pb-6">
         <div className="space-y-2">

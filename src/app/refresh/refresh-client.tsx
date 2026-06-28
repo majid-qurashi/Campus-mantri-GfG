@@ -1,15 +1,16 @@
+"use client";
+
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { Loader2, CheckCircle2, XCircle, RefreshCw, ArrowRight } from 'lucide-react';
-import { SEOHead } from '../components/seo-head';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
-import { Button } from '../components/ui/button';
-import { loadAchievements, loadWorkshops, loadGallery, loadProjects } from '../lib/dataLoader';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
+import { Button } from '../../components/ui/button';
+import { loadAchievements, loadWorkshops, loadGallery, loadProjects } from '../../lib/dataLoader';
 
 type SyncStatus = 'idle' | 'syncing' | 'success' | 'error';
 
-export function Refresh() {
-  const navigate = useNavigate();
+export function RefreshClient() {
+  const router = useRouter();
   const [achStatus, setAchStatus] = useState<SyncStatus>('idle');
   const [workStatus, setWorkStatus] = useState<SyncStatus>('idle');
   const [galStatus, setGalStatus] = useState<SyncStatus>('idle');
@@ -46,6 +47,9 @@ export function Refresh() {
       await loadProjects(true);
       setProjStatus('success');
 
+      // 5. Server-side cache revalidation
+      await fetch('/api/revalidate').catch(err => console.warn('Server cache revalidation failed:', err));
+
       setCompleted(true);
     } catch (error) {
       console.error("Manual revalidation failed:", error);
@@ -76,7 +80,7 @@ export function Refresh() {
       setRedirectCount((prev) => {
         if (prev <= 1) {
           clearInterval(interval);
-          navigate('/');
+          router.push('/');
           return 0;
         }
         return prev - 1;
@@ -84,7 +88,7 @@ export function Refresh() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [completed, navigate]);
+  }, [completed, router]);
 
   const getStatusIcon = (status: SyncStatus) => {
     switch (status) {
@@ -102,11 +106,6 @@ export function Refresh() {
 
   return (
     <div className="flex items-center justify-center min-h-[70vh] py-8 px-4">
-      <SEOHead 
-        title="Cache Revalidation" 
-        description="Manually revalidate and reload Google Sheets data cache." 
-      />
-
       <Card className="w-full max-w-md border-primary/20 bg-linear-to-b from-primary/5 via-transparent to-transparent">
         <CardHeader className="text-center">
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary mb-3">
@@ -151,7 +150,7 @@ export function Refresh() {
             <div className="text-center p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-900/40 text-emerald-800 dark:text-emerald-400 space-y-2 animate-in fade-in zoom-in-95 duration-200">
               <p className="text-sm font-bold">Successfully revalidated all feeds!</p>
               <p className="text-xs opacity-90">Redirecting to Home Page in {redirectCount} seconds...</p>
-              <Button size="sm" className="mt-2 w-full flex items-center justify-center gap-1.5" onClick={() => navigate('/')}>
+              <Button size="sm" className="mt-2 w-full flex items-center justify-center gap-1.5" onClick={() => router.push('/')}>
                 Go to Home Now <ArrowRight className="h-4 w-4" />
               </Button>
             </div>

@@ -1,9 +1,10 @@
-import { SEOHead } from '../components/seo-head';
-import { Timeline, type TimelineItemProps } from '../components/timeline';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
-import { Badge } from '../components/ui/badge';
+"use client";
 
-export function About() {
+import { Timeline, type TimelineItemProps } from '../../components/timeline';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Badge } from '../../components/ui/badge';
+
+export function AboutClient() {
   const skills = {
     frontend: [
       "HTML5", "CSS3", "JavaScript (ES6+)", "TypeScript", 
@@ -97,11 +98,6 @@ export function About() {
 
   return (
     <div className="space-y-12 py-8">
-      <SEOHead 
-        title="About Me" 
-        description={`Bio education history technical skills and experience timeline of Majid Yaseen Qurashi.`} 
-      />
-
       {/* Intro Header */}
       <section className="space-y-4">
         <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">About Me</h1>
