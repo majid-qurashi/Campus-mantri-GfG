@@ -1,70 +1,99 @@
-# 🚀 GeeksforGeeks Campus Mantri Portfolio
+# 👑 GeeksforGeeks Campus Mantri Portfolio
 
-A modern, responsive, and interactive portfolio website showcasing my journey as the 🏆 GeeksforGeeks Campus Mantri at 🏫 Government College of Engineering and Technology, Kashmir. The website highlights my leadership, achievements, workshops, projects, and contributions to the developer community.
+A premium, responsive, and modern developer portfolio website for **Majid Yaseen Qurashi**, the official **GeeksforGeeks Campus Mantri** at **Government College of Engineering and Technology (GCET), Safapora, Kashmir**. 
+
+This portfolio highlights his leadership role, competitive programming workshops, tech certifications, and software projects in a GFG-branded design theme featuring advanced light/dark modes.
 
 ---
 
-## ✨ Features
+## 🚀 Key Features
 
-- 📱 Fully Responsive Design
-- 👨‍💻 About Me
-- 🏅 Campus Mantri Journey
-- 📜 Official Appointment & Offer Letter
-- 🎖️ Achievements & Certifications
-- 🎤 Workshops & Events
-- 🖼️ Gallery
-- 💼 Projects Showcase
-- 📬 Contact Page
-- 🌐 Social Media Integration
+*   **GFG-Inspired Aesthetic**: Custom styling matching GeeksforGeeks' brand green with glassmorphic layouts, interactive cards, and responsive vertical timelines.
+*   **Google Sheets Source of Truth**: All datasets (Workshops, Achievements, Gallery, and Projects) are loaded dynamically from published Google Sheets CSV feeds.
+*   **Hourly Browser Cache**: Caches fetched data in `localStorage` for **1 hour** to guarantee sub-millisecond load times and protect sheets from heavy traffic query limits.
+*   **Dynamic Revalidation Route (`/refresh`)**: A hidden URL route (`/refresh`) allows administrators to manually clear browser storage and trigger an immediate data sync from Google Sheets with live progress status.
+*   **Web3Forms Contact Form**: Clean form integrated with the Web3Forms API, featuring client-side syntax checks for email format and optional phone numbers (7-15 digits format).
+*   **Lightbox Viewers**: Dynamic overlay viewers for certification credentials, workshop resources, and gallery event images.
 
 ---
 
 ## 🛠️ Tech Stack
 
-- ⚛️ React.js
-- 🎨 Tailwind CSS
-- 📘 TypeScript
-- 🎞️ Framer Motion
-- 🧭 React Router
-- ⚡ Vite
+*   **Core**: React 19 (Vite) + TypeScript
+*   **Styling**: Tailwind CSS + shadcn UI components (cva, clsx)
+*   **Routing**: React Router v7
+*   **Icons**: Lucide React + custom SVG brand icons
 
 ---
 
-## 📂 Website Pages
+## 📁 Key Project Files
 
-- 🏠 Home
-- 🙋 About
-- 👑 Campus Mantri
-- 🏆 Achievements
-- 🎤 Workshops
-- 🖼️ Gallery
-- 💻 Projects
-- 📩 Contact
+*   👉 [src/config/content.ts](file:///Users/akeel/Documents/code/others/majid-mantri/src/config/content.ts) — App settings, personal metadata, and Google Sheets CSV URLs.
+*   👉 [src/lib/dataLoader.ts](file:///Users/akeel/Documents/code/others/majid-mantri/src/lib/dataLoader.ts) — Caching engine and fetch transform layer.
+*   👉 [src/lib/csv.ts](file:///Users/akeel/Documents/code/others/majid-mantri/src/lib/csv.ts) — Lightweight, robust double-quote CSV parser.
+*   👉 [src/pages/refresh.tsx](file:///Users/akeel/Documents/code/others/majid-mantri/src/pages/refresh.tsx) — Manual revalidation page mapped to `/refresh`.
+*   👉 [src/pages/contact.tsx](file:///Users/akeel/Documents/code/others/majid-mantri/src/pages/contact.tsx) — Contact form utilizing Web3Forms.
 
 ---
 
-## 🔮 Future Improvements
+## ⚙️ Configuration & Sheets Setup
 
-- 🌙 Dark Mode
-- ✍️ Blog Section
-- 📝 Event Registration
-- ✅ Certificate Verification
-- 📊 Admin Dashboard
+To map your Google Sheets as the data source:
 
----
-
-## 👨‍💻 Author
-
-### Majid Yaseen Qurashi
-
-🏆 GeeksforGeeks Campus Mantri
-
-💻 Software Engineer
-
-🏫 Government College of Engineering and Technology, Kashmir
+1.  Open your Google Sheet.
+2.  Click **File > Share > Publish to web**.
+3.  For each tab (**Achievements**, **Workshops**, **Gallery**, **Projects**), select it individually and choose **Comma-separated values (.csv)** as the export format.
+4.  Copy the generated CSV URLs.
+5.  Open [src/config/content.ts](file:///Users/akeel/Documents/code/others/majid-mantri/src/config/content.ts) and paste the links into the `googleSheets` config keys:
+    ```typescript
+    googleSheets: {
+      achievements: "https://docs.google.com/spreadsheets/d/e/.../pub?gid=0&single=true&output=csv",
+      workshops: "https://docs.google.com/spreadsheets/d/e/.../pub?gid=553910794&single=true&output=csv",
+      gallery: "https://docs.google.com/spreadsheets/d/e/.../pub?gid=1019049056&single=true&output=csv",
+      projects: "https://docs.google.com/spreadsheets/d/e/.../pub?gid=271994496&single=true&output=csv",
+    }
+    ```
 
 ---
 
-## 📄 License
+## 🔄 Cache Revalidation (`/refresh`)
 
-This project is created for educational and portfolio purposes. All GeeksforGeeks logos, trademarks, and branding belong to their respective owners.
+When you update data inside your Google Sheet, Google takes a few minutes to publish changes to the CSV feed. Additionally, this app caches data for 1 hour. To see updates immediately:
+1. Open the browser and visit `your-portfolio-domain.com/refresh` (or `localhost:5173/refresh` locally).
+2. The page will display progress bars as it clears local cache and pulls fresh datasets.
+3. Once completed, you will be automatically redirected to the home page showing the updated content.
+
+---
+
+## 📬 Contact Form Integration (Web3Forms)
+
+The form on the Contact page submits messages directly to your inbox via Web3Forms:
+*   The default access key is configured in [src/pages/contact.tsx](file:///Users/akeel/Documents/code/others/majid-mantri/src/pages/contact.tsx) using the parameter `a21f8980-3a6c-4366-8f7c-15fa25578cd6`.
+*   To change this, sign up on [Web3Forms](https://web3forms.com/) to get a free access key and replace the string in the code.
+
+## 📱 Progressive Web App (PWA) Support
+
+This application is fully PWA-compliant and installable on modern devices (iOS, Android, macOS, Windows).
+- **Icons**: Generated by cropping and scaling the profile avatar `majid.webp` into standard square sizes (`192x192` and `512x512` PNG formats) stored in the `/public` root.
+- **Manifest**: Accessible at `/manifest.json` describing theme colors, app metadata, display standalone behaviors, and launchers.
+- **Service Worker**: Configured in `/sw.js` and registered in [main.tsx](file:///Users/akeel/Documents/code/others/majid-mantri/src/main.tsx) to cache index shells, manifests, icons, and Majid's profile image to enable basic offline capability.
+
+---
+
+## 💻 Local Development
+
+Ensure you have [pnpm](https://pnpm.io/) installed.
+
+```bash
+# 1. Install dependencies
+pnpm install
+
+# 2. Run the development server
+pnpm run dev
+
+# 3. Validate with ESLint
+pnpm run lint
+
+# 4. Compile and bundle for production
+pnpm run build
+```
